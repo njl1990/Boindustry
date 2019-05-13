@@ -1,14 +1,13 @@
 from pymongo import MongoClient
 from bson import json_util
 from bson.objectid import ObjectId
-
 # Create your models here.
 
 class DB:
 
 	db_host = 'localhost'
 	db_port = 27017
-	db_name = 'icsdb'
+	db_name = 'oeedb'
 	
 
 	def DBClient():
@@ -16,9 +15,22 @@ class DB:
 		DBClient = mongoClient[DB.db_name]
 		return DBClient
 
+class OEEData:
+	# Create
+	def UpDateRecord(filters,Content):
+		oeeRecord = DB.DBClient()['mainrcd']
+		result=oeeRecord.update(filters,{'$set':Content}, upsert=True)
+		return result
+
+	# Load Load MainInfo
+	def GetRecordByFilter(filters):
+		oeeRecord = DB.DBClient()['mainrcd']
+		item=oeeRecord.find_one(filters)
+		return item
 
 
-
+################################
+'''
 class CTask:
 	def CreateCTask(data):
 		ctask = DB.DBClient()['CooperationTask']
@@ -130,3 +142,4 @@ class Cooperator:
 			NameList.append(ctopicSelectorObject['Name'])
 		return NameList
 
+'''

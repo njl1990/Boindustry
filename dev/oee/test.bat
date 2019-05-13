@@ -1,2 +1,2 @@
-python test.py
+python service.py
 pause

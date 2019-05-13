@@ -2,8 +2,8 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.core import serializers
 from django.template import loader
-
-from common import ResponseMsg
+from oee.common import ResponseMsg
+from oee.chart import OeeChart
 from bson.objectid import ObjectId
 from bson import json_util
 
@@ -11,12 +11,12 @@ from bson import json_util
 #PageLoad
 def index(request):
 	context = {'data': 'data'}
-	return render(request, 'OeeInfo.html', ResponseMsg.success(contex))
+	return render(request, 'OeeInfo.html',context)
 
 
 def OeeInfo(request):
-	context = {'data': 'data'}
-	return render(request, 'OeeInfo.html', context)
+	context = None
+	return render(request, 'OeeInfo.html', ResponseMsg.success(context))
 
 def OeeReport(request):
 	context = {'data': 'data'}
@@ -31,29 +31,45 @@ def OeeConfig(request):
 	return render(request, 'OeeConfig.html', context)
 
 def OeeMachineList(request):
-	context = {'data': 'data'}
+
 	return render(request, 'OeeMachineList.html', context)
 
 # API
 ## Load
 def LoadOee(request):
-	# ID=request.POST['ID']
-	data = "data"
-	return HttpResponse(json_util.dumps(data))
+	MachineID=request.POST['MachineID']
+	# Load oee data from db	
+	context = {
+		'xFeilds': OeeChart.getXFields(),
+		'yValues': OeeServcie.LoadOeeData(MachineID,"OEE")	
+		}
+	return HttpResponse(ResponseMsg.success(context))
 
 
 def LoadProductionEfficiencyRate(request):
-	# ID=request.POST['ID']
-	data = "data"
-	return HttpResponse(json_util.dumps(data))
+	MachineID=request.POST['MachineID']
+	# Load oee data from db	
+	context = {
+		'xFeilds': OeeChart.getXFields(),
+		'yValues': OeeServcie.LoadOeeData(MachineID,"PER")	
+		}
+	return HttpResponse(ResponseMsg.success(context))
 
 def LoadTimeUtilizationRate(request):
-	# ID=request.POST['ID']
-	data = "data"
-	return HttpResponse(json_util.dumps(data))
+	MachineID=request.POST['MachineID']
+	# Load oee data from db	
+	context = {
+		'xFeilds': OeeChart.getXFields(),
+		'yValues': OeeServcie.LoadOeeData(MachineID,"TUR")	
+		}
+	return HttpResponse(ResponseMsg.success(context))
 
 
 def LoadYieldRate(request):
-	# ID=request.POST['ID']
-	data = "data"
-	return HttpResponse(json_util.dumps(data))
+	MachineID=request.POST['MachineID']
+	# Load oee data from db	
+	context = {
+		'xFeilds': OeeChart.getXFields(),
+		'yValues': OeeServcie.LoadOeeData(MachineID,"YR")	
+		}
+	return HttpResponse(ResponseMsg.success(context))
