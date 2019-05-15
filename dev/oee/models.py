@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 from bson import json_util
 from bson.objectid import ObjectId
+import oee.stub
 # Create your models here.
 
 class DB:

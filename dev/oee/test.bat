@@ -1,2 +1,2 @@
-python service.py
+python views.py
 pause

@@ -4,7 +4,7 @@
 	<head>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 		<meta charset="utf-8" />
-		<title>工业互联协同平台</title>
+		<title>OEE - 工业微服务</title>
 
 		<meta name="description" content="and Validation" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
@@ -36,7 +36,8 @@
 
 		<!-- ace settings handler -->
 		<script src="{% static 'assets/js/ace-extra.min.js' %}"></script>
-
+		<script src="{% static 'assets/js/echarts.min.js' %}"></script>
+		
 		<!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
 
 		<!--[if lte IE 8]>
@@ -54,7 +55,7 @@
 					<a href="index.html" class="navbar-brand">
 						<small>
 							<i class="fa fa-leaf"></i>
-							工业互联网协同系统
+							OEE
 						</small>
 					</a>
 				</div>
@@ -66,91 +67,110 @@
 				try{ace.settings.loadState('main-container')}catch(e){}
 			</script>
 
+			
+			<div id="sidebar" class="sidebar      h-sidebar                navbar-collapse collapse          ace-save-state">
+				<script type="text/javascript">
+					try{ace.settings.loadState('sidebar')}catch(e){}
+				</script>
+
+				<ul class="nav nav-list">
+					<li class="hover">
+						<a href="index.html">
+							<i class="menu-icon fa fa-tachometer"></i>
+							<span class="menu-text"> OEE 可视化 </span>
+						</a>
+
+						<b class="arrow"></b>
+					</li>
+
+					<li class="hover">
+						<a href="index.html">
+							<i class="menu-icon fa fa-desktop"></i>
+							<span class="menu-text"> 参数设置  </span>
+
+						</a>
+
+						<b class="arrow"></b>
+					</li>
+
+
+					<li class="hover">
+						<a href="index.html">
+							<i class="menu-icon fa fa-pencil-square-o"></i>
+							<span class="menu-text"> 事务上报  </span>
+						</a>
+
+						<b class="arrow"></b>
+					</li>
+				</ul><!-- /.nav-list -->
+			</div>
+			
+			
 			<div class="main-content">
 				<div class="main-content-inner">
 					<div class="page-content">
 						<div class="page-header">
 							<h1>
-								供应链协同
+								OEE-工业微服务
 								<small>
 									<i class="ace-icon fa fa-angle-double-right"></i>
-									协同任务清单
+									OEE指标可视化
 								</small>
 							</h1>
 						</div><!-- /.page-header -->
 
 						<div class="row">
-
 							<div class="col-xs-12">
-							<p>
-							{{data.name}}
-							</p>
-								<table id="simple-table" class="table  table-bordered table-hover">
-									<thead>
-										<tr>
-											<!---
-											<th class="center">
-												<label class="pos-rel">
-													<input type="checkbox" class="ace" />
-													<span class="lbl"></span>
-												</label>
-											</th>
-											---->
-											<th class="center">协同任务</th>
-											<th class="center">供应商</th>
-											<th class="center">状态</th>
-											<th class="center">操作</th>
-										</tr>
-									</thead>
+								<div class="hidden-sm hidden-xs">
+									<button type="button" class="sidebar-collapse btn btn-white btn-primary" data-target="#sidebar">
+										<i class="ace-icon fa fa-angle-double-up" data-icon1="ace-icon fa fa-angle-double-up" data-icon2="ace-icon fa fa-angle-double-down"></i>
+										收起/展开 菜单
+									</button>
+								</div>
 
-									<tbody>
-										{% for item in CTopicTaskList %}
-											<tr CTaskId="{{item.id}}">
-												<!---
-												<td class="center">
-													<label class="pos-rel">
-														<input type="checkbox" class="ace" />
-														<span class="lbl"></span>
-													</label>
-												</td>
-												---->
+								<div class="center">
+									<div class="row">
+										<div class="col-sm-4">
+											<h3 class="header smaller blue">设备综合效率（OEE）</h3>
+											<p> 统计设备的综合效率，包括时间稼动率、性能稼动率和良品率</p>
+										</div>
+										<div class="col-sm-8">
+										<div id="container3" style="width: 600px;height:400px;"></div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-6">
+											<h3 class="header smaller blue">时间稼动率（Time utilization rate）</h3>
+											<p>设备有效工作时间和计划工作时间的比例</p>
+											 <div id="container" style="width: 600px;height:400px;"></div>
+											<!-- <div class="widget-box" id="widget-box-1">
+												<div class="widget-header">
+													<h5 class="widget-title">2019-05-10 XER设备  时间稼动率</h5>
+												</div>
 
-												<td class="center">{{item.CTaskName}}</td>
-												<td class="center">
-													{{item.Cooperator}}
-												</td>
-												<td class="hidden-480 center">
-													<span class="label label-lg label-warning label-status-{{item.id}}">{{item.CStatus}}</span>
-												</td>
-												<td class="center">
-													<div class="hidden-sm hidden-xs btn-group">
-														<button class="btn btn-xs btn-danger" CTaskId="{{item.id}}">
-															<i class="ace-icon fa fa-trash-o bigger-120"></i>
-														</button>
-														<button class="btn btn-xs btn-warning btn-update" CTaskId="{{item.id}}">
-															<i class="ace-icon fa fa-flag bigger-120"></i>
-														</button>
-													</div>													
-												</td>
-											</tr>
-										{% endfor %}
-									</tbody>
+												<div class="widget-body">
+													<div class="widget-main">
+														<canvas id="myChart" width="100%" height="50%"></canvas>
+													</div>
+												</div>
+											</div> -->
+										</div>
+										<div class="col-sm-6">
+											<h3 class="header smaller blue">性能稼动率（Production efficiency）</h3>
+											<p>某一时段实际产出和标准产出的比例</p>
+											<div id="main" style="width: 600px;height:400px;"></div>
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<h3 class="header smaller blue">良品率（Yield）</h3>
+										<p>产出的良品数量和实际产出总量的比例</p>
+											 <div id="containers" style="width: 600px;height:400px;"></div>
+									</div>
 
-								</table>
-							</div><!-- /.span -->
+								</div>
 
-							
-							<div class="col-xs-12">
-								<h3 class="header smaller lighter green">协同管理</h3>
-								<p></p>
-								<a href="./Createtask" class="btn btn-app btn-primary no-radius">
-									<i class="ace-icon fa fa-pencil-square-o bigger-230"></i>
-									任务创建
-								</a>
-								</div><!-- /.btn-group -->
-							</div>
-
-
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
 						</div><!-- /.row -->
 					</div><!-- /.page-content -->
 				</div>
@@ -162,8 +182,8 @@
 				<div class="footer-inner">
 					<div class="footer-content">
 						<span class="bigger-120">
-							<span class="blue bolder">Ace</span>
-							Application &copy; 2013-2014
+							<span class="blue bolder">CASICloud</span>
+							oee-cloud &copy; 2013-2014
 						</span>
 
 						&nbsp; &nbsp;
@@ -216,9 +236,173 @@
 		<!-- ace scripts -->
 		<script src="{% static 'assets/js/ace-elements.min.js' %}"></script>
 		<script src="{% static 'assets/js/ace.min.js' %}"></script>
-
 		<!-- inline scripts related to this page -->
+		
 		<script type="text/javascript">
+			var ctx = document.getElementById('myChart').getContext('2d');
+			var myChart = new Chart(ctx, {
+			    type: 'line',
+			    data: {
+			        labels: ['08', '09', '10', '11', '12', '13'],
+			        datasets: [{
+			            label: '# of Votes',
+			            data: [12, 19, 3, 5, 2, 3],
+			            backgroundColor: [
+			                'rgba(255, 99, 132, 0.2)',
+			                'rgba(54, 162, 235, 0.2)',
+			                'rgba(255, 206, 86, 0.2)',
+			                'rgba(75, 192, 192, 0.2)',
+			                'rgba(153, 102, 255, 0.2)',
+			                'rgba(255, 159, 64, 0.2)'
+			            ],
+			            borderColor: [
+			                'rgba(255, 99, 132, 1)',
+			                'rgba(54, 162, 235, 1)',
+			                'rgba(255, 206, 86, 1)',
+			                'rgba(75, 192, 192, 1)',
+			                'rgba(153, 102, 255, 1)',
+			                'rgba(255, 159, 64, 1)'
+			            ],
+			            borderWidth: 1
+			        }]
+			    },
+			    options: {
+			        scales: {
+			            yAxes: [{
+			                ticks: {
+			                    beginAtZero: true
+			                }
+			            }]
+			        }
+			    }
+			});
+			</script>
+			<script type="text/javascript">
+					// 基于准备好的dom，初始化echarts实例  性能稼动率
+					var myChart = echarts.init(document.getElementById('main'));
+
+					// 指定图表的配置项和数据
+					var option = {
+			xAxis: {
+					type: 'category',
+					boundaryGap: false,
+					data: ['', '4', '8', '12', '16', '20', '24']
+			},
+			yAxis: {
+					type: 'value'
+			},
+			series: [{
+					data: [0 ,20 , , , , ],
+					type: 'line',
+					areaStyle: {}
+			}]
+	};
+
+
+					// 使用刚指定的配置项和数据显示图表。
+					myChart.setOption(option);
+			</script>
+
+			<!-- 时间稼动率 -->
+			<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+			<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
+			<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
+			<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
+			<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
+			<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+			<!-- <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=xfhhaTThl11qYVrqLZii6w8qE5ggnhrY&__ec_v__=20190126"></script> -->
+			<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+			<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
+			<script type="text/javascript">
+			var dom = document.getElementById("container");
+			var myChart = echarts.init(dom);
+			var app = {};
+			option = null;
+			option = {
+			 xAxis: {
+					 type: 'category',
+						boundaryGap: false,
+					 data: ['', '4', '8', '12', '16', '20', '24']
+			 },
+			 yAxis: {
+					 type: 'value'
+			 },
+			 series: [{
+					 data: [0, 13,18 ,22 ,41 ,28 ,77 ],
+					 type: 'line'
+			 }]
+			};
+			;
+			if (option && typeof option === "object") {
+			 myChart.setOption(option, true);
+			}
+			</script>
+<script type="text/javascript">
+ // 良品率
+var dom = document.getElementById("containers");
+var myChart = echarts.init(dom);
+var app = {};
+option = null;
+option = {
+	 xAxis: {
+			 type: 'category',
+			 	boundaryGap: false,
+			 data: ['', '4', '8', '12', '16', '20', '24']
+	 },
+	 yAxis: {
+			 type: 'value'
+	 },
+	 series: [{
+			 data: [120, 200, 150, 80, 70, 110, 130],
+			 type: 'line',
+			 symbol: 'triangle',
+			 symbolSize: 20,
+			 lineStyle: {
+					 normal: {
+							 color: 'green',
+							 width: 4,
+							 type: 'dashed'
+					 }
+			 },
+			 itemStyle: {
+					 normal: {
+							 borderWidth: 3,
+							 borderColor: 'yellow',
+							 color: 'blue'
+					 }
+			 }
+	 }]
+};
+;
+if (option && typeof option === "object") {
+	 myChart.setOption(option, true);
+}
+			</script>
+			
+			
+		
+		<script type="text/javascript">
+			function LoadData(MachineID){
+				urlstr = "./LoadOee"
+			    htmlobj=$.ajax({
+			    	type: 'POST',
+					url:urlstr,
+					async:false,
+					data: {'MachineID':MachineID},
+					success:
+				        function(data) {
+				        	//alert(data)
+				        	if(data!='None'){
+				        		var obj = eval('(' + data + ')');	
+								alert(obj.data.xFeilds)
+								alert(obj.data.yValues)
+				        	}
+				        }
+			    });
+			}
+
+			
+		
 			jQuery(function($) {
 			
 				$('[data-rel=tooltip]').tooltip();

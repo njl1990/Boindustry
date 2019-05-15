@@ -1,6 +1,7 @@
 
-from models import OEEData
-from common import DateStr
+from oee.models import OEEData
+from oee.common import DateStr
+from oee.stub import STUB
 import string
 
 class OeeServcie:
@@ -13,9 +14,11 @@ class OeeServcie:
 			"Type":Type
 			} 
 		result=OEEData.GetRecordByFilter(Filter)
-
 		if OeeServcie.CheckUpdate(result):
-			result=OeeServcie.UpDateRecord(MachineID,Type)
+			OeeServcie.UpDateRecord(MachineID,Type)
+			result=OEEData.GetRecordByFilter(Filter)
+
+		#print(result)
 		return result;
 
 ######################################
@@ -28,16 +31,15 @@ class OeeServcie:
 			"Date":TodaySTR,
 			"Type":Type
 		}
-
 		Contents={
 			'Data':OeeServcie.Compute(MachineID,Type,TodaySTR),
 			'LastUpdate':DateStr.currentTimeStr()
 		}
-		print(Contents)
-		OEEData.UpDateRecord(Filters,Contents)
+		result=OEEData.UpDateRecord(Filters,Contents)
+		return result
 
 	def Compute(MachineID,Type,TodaySTR):
-		return 5
+		return STUB.getStubData();
 
 
 ######################################
@@ -53,4 +55,12 @@ class OeeServcie:
 		else:
 			return True 
 
-OeeServcie.LoadOeeData('134SV20','OEE')
+	def GetViewData(RecordData):
+		xList=[]
+		yList=[]
+
+		for item in RecordData['Data']:
+			print(item)
+			xList.append(item['x'])
+			yList.append(item['y'])
+		return xList,yList

@@ -4,6 +4,7 @@ from django.core import serializers
 from django.template import loader
 from oee.common import ResponseMsg
 from oee.chart import OeeChart
+from oee.service import OeeServcie
 from bson.objectid import ObjectId
 from bson import json_util
 
@@ -39,11 +40,16 @@ def OeeMachineList(request):
 def LoadOee(request):
 	MachineID=request.POST['MachineID']
 	# Load oee data from db	
+
+	recordData = OeeServcie.LoadOeeData(MachineID,"OEE")
+	xFeilds,yValues = OeeServcie.GetViewData(recordData)
 	context = {
-		'xFeilds': OeeChart.getXFields(),
-		'yValues': OeeServcie.LoadOeeData(MachineID,"OEE")	
+		'xFeilds': xFeilds,
+		'yValues': yValues
 		}
-	return HttpResponse(ResponseMsg.success(context))
+	result=ResponseMsg.success(context)
+	print(result)
+	return HttpResponse(json_util.dumps(result))
 
 
 def LoadProductionEfficiencyRate(request):
@@ -53,7 +59,9 @@ def LoadProductionEfficiencyRate(request):
 		'xFeilds': OeeChart.getXFields(),
 		'yValues': OeeServcie.LoadOeeData(MachineID,"PER")	
 		}
-	return HttpResponse(ResponseMsg.success(context))
+	result=ResponseMsg.success(context)
+	print(result)
+	return HttpResponse(json_util.dumps(result))
 
 def LoadTimeUtilizationRate(request):
 	MachineID=request.POST['MachineID']
@@ -62,7 +70,9 @@ def LoadTimeUtilizationRate(request):
 		'xFeilds': OeeChart.getXFields(),
 		'yValues': OeeServcie.LoadOeeData(MachineID,"TUR")	
 		}
-	return HttpResponse(ResponseMsg.success(context))
+	result=ResponseMsg.success(context)
+	print(result)
+	return HttpResponse(json_util.dumps(result))
 
 
 def LoadYieldRate(request):
@@ -72,4 +82,6 @@ def LoadYieldRate(request):
 		'xFeilds': OeeChart.getXFields(),
 		'yValues': OeeServcie.LoadOeeData(MachineID,"YR")	
 		}
-	return HttpResponse(ResponseMsg.success(context))
+	result=ResponseMsg.success(context)
+	print(result)
+	return HttpResponse(json_util.dumps(result))
