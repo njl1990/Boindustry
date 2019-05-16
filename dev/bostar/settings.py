@@ -126,3 +126,45 @@ STATICFILES_DIRS = [
 	("js",os.path.join(STATIC_ROOT,'js')),
 	("assets",os.path.join(STATIC_ROOT,'assets')),
 ]
+
+BASE_LOG_DIR = os.path.join(BASE_DIR, "log")
+
+LOGGING = {
+	'version': 1,  # 保留字
+	#'disable_existing_loggers': true,  # 禁用已经存在的logger实例
+	
+	# 日志文件的格式
+    'formatters': {
+        # 详细的日志格式
+        'standard': {
+            'format': '[%(asctime)s][%(threadName)s:%(thread)d][task_id:%(name)s][%(filename)s:%(lineno)d]'
+                      '[%(levelname)s][%(message)s]'
+        },
+        # 简单的日志格式
+        'simple': {
+            'format': '[%(levelname)s][%(asctime)s][%(filename)s:%(lineno)d]%(message)s'
+        },
+        # 定义一个特殊的日志格式
+        'collect': {
+            'format': '%(message)s'
+        }
+    },
+	
+	# 过滤器
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+	# 处理器
+    'handlers': {
+		 # 在终端打印
+        'console': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],  # 只有在Django debug为True时才在屏幕打印日志
+            'class': 'logging.StreamHandler',  #
+            'formatter': 'simple'
+        },
+		
+	}
+}

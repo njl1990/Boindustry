@@ -25,6 +25,10 @@ class OeeServcie:
 			result=OEEData.GetRecordByFilter(Filter)
 		return result;
 
+	def LoadMachineList():
+		result=OEEData.LoadMachineList()
+		return result
+
 ######################################
 	
 	# Compute
@@ -113,7 +117,6 @@ class OeeServcie:
 		print(result)
 		return result
 
-
 	# 计算数据
 	def Compute(MachineID,Type,TodaySTR):
 		#拉取数据
@@ -198,3 +201,4 @@ class OeeServcie:
 		return yList
 
 #OeeServcie.Compute('TLZH-01-08-3000416','YR',DateStr.getTodayStr())
+#OeeServcie.LoadMachineList()

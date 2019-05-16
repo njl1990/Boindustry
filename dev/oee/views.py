@@ -9,6 +9,7 @@ from bson.objectid import ObjectId
 from bson import json_util
 
 
+
 #PageLoad
 def index(request):
 	context = {'data': 'data'}
@@ -32,7 +33,8 @@ def OeeConfig(request):
 	return render(request, 'OeeConfig.html', context)
 
 def OeeMachineList(request):
-
+	context = {'MachineList': OeeServcie.LoadMachineList()}
+	print(context)
 	return render(request, 'OeeMachineList.html', context)
 
 # API

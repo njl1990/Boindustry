@@ -7,7 +7,7 @@ urlpatterns = [
 	path('OeeReport', views.OeeReport, name='OeeReport'),
 	path('OeeTransaction', views.OeeTransaction, name='OeeTransaction'),
 	path('OeeConfig', views.OeeConfig, name='OeeConfig'),
-	path('OeeMachineList', views.OeeReport, name='OeeMachineList'),
+	path('OeeMachineList', views.OeeMachineList, name='OeeMachineList'),
 
 
 	# API

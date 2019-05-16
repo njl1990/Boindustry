@@ -1,0 +1,2 @@
+python dcnew.py
+pause

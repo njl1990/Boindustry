@@ -130,29 +130,47 @@
 
 								<div class="center">
 									<div class="row">
-										<h3 class="header smaller blue">设备综合效率（OEE）</h3>
-										<p> 统计设备的综合效率，包括时间稼动率、性能稼动率和良品率</p>
-										<div id="OEE-chart" style="width: 100%;height:300px;"></div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-6">
-											<h3 class="header smaller blue">时间稼动率（Time utilization rate）</h3>
-											<p>设备有效工作时间和计划工作时间的比例</p>
-											 <div id="TUR-chart" style="width: 100%;height:400px;"></div>
-										</div>
-										<div class="col-sm-6">
-											<h3 class="header smaller blue">性能稼动率（Production efficiency）</h3>
-											<p>某一时段实际产出和标准产出的比例</p>
-											<div id="PER-chart" style="width: 100%;height:400px;"></div>
-										</div>
-									</div>
-									<div class="col-sm-6">
-										<h3 class="header smaller blue">良品率（Yield）</h3>
-										<p>产出的良品数量和实际产出总量的比例</p>
-											 <div id="YR-chart" style="width: 100%;height:400px;"></div>
-									</div>
+										
+										<div class="col-xs-12">
+											<table id="simple-table" class="table  table-bordered table-hover">
+												<thead>
+													<tr>
+														<!---
+														<th class="center">
+															<label class="pos-rel">
+																<input type="checkbox" class="ace" />
+																<span class="lbl"></span>
+															</label>
+														</th>
+														---->
+														<th class="center">设备名称</th>
+														<th class="center">设备类型</th>
+														<th class="center">设备型号</th>
+														<th class="center">测试记录数</th>
+													</tr>
+												</thead>
 
+												<tbody>
+													{% for item in MachineList %}
+														<tr>
+															<td class="center">{{item.instruName}}</td>
+															<td class="center">
+																{{item.type}}
+															</td>
+															<td class="center">
+																{{item.dscp}}
+															</td>
+															<td class="center">
+																{{item.count}}								
+															</td>
+														</tr>
+													{% endfor %}
+												</tbody>
+
+											</table>
+										</div><!-- /.span -->
+										
+									</div>
 								</div>
 
 								<!-- PAGE CONTENT ENDS -->

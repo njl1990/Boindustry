@@ -28,6 +28,17 @@ class OEEData:
 		item=oeeRecord.find_one(filters)
 		return item
 
+	def LoadMachineList():
+		oeeRecord = DB.DBClient()['basedata']
+		#result=oeeRecord.aggregate([{'$group':{'_id':"$instruName"},'count':{'$sum':1},'type':{'$first':'$instruType'},'dscp':{'$first':"$description"}}])
+		result=oeeRecord.aggregate([
+			{'$group':{'_id':'$instruName','instruName':{'$first':'$instruName'},'count':{'$sum':1},'type':{'$first':'$instruType'},'dscp':{'$first':"$description"}}}
+		])
+		MachineList=[]
+		for item in result:
+			MachineList.append(item)
+		return MachineList
+
 class BaseData:
 	# Load Load MainInfo
 	def GetRecordByFilter(filters):
