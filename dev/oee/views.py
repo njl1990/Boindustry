@@ -40,15 +40,12 @@ def OeeMachineList(request):
 def LoadOee(request):
 	MachineID=request.POST['MachineID']
 	# Load oee data from db	
-
-	recordData = OeeServcie.LoadOeeData(MachineID,"OEE")
-	xFeilds,yValues = OeeServcie.GetViewData(recordData)
 	context = {
-		'xFeilds': xFeilds,
-		'yValues': yValues
+		'xFeilds': OeeChart.getXFields(),
+		'yValues': OeeServcie.GetViewData(OeeChart.getXFields(),OeeServcie.LoadOeeData(MachineID,"OEE"))
 		}
 	result=ResponseMsg.success(context)
-	print(result)
+	#print(result)
 	return HttpResponse(json_util.dumps(result))
 
 
@@ -57,10 +54,10 @@ def LoadProductionEfficiencyRate(request):
 	# Load oee data from db	
 	context = {
 		'xFeilds': OeeChart.getXFields(),
-		'yValues': OeeServcie.LoadOeeData(MachineID,"PER")	
+		'yValues': OeeServcie.GetViewData(OeeChart.getXFields(),OeeServcie.LoadOeeData(MachineID,"PER"))
 		}
 	result=ResponseMsg.success(context)
-	print(result)
+	#print(result)
 	return HttpResponse(json_util.dumps(result))
 
 def LoadTimeUtilizationRate(request):
@@ -68,10 +65,10 @@ def LoadTimeUtilizationRate(request):
 	# Load oee data from db	
 	context = {
 		'xFeilds': OeeChart.getXFields(),
-		'yValues': OeeServcie.LoadOeeData(MachineID,"TUR")	
+		'yValues': OeeServcie.GetViewData(OeeChart.getXFields(),OeeServcie.LoadOeeData(MachineID,"TUR"))
 		}
 	result=ResponseMsg.success(context)
-	print(result)
+	#print(result)
 	return HttpResponse(json_util.dumps(result))
 
 
@@ -80,8 +77,8 @@ def LoadYieldRate(request):
 	# Load oee data from db	
 	context = {
 		'xFeilds': OeeChart.getXFields(),
-		'yValues': OeeServcie.LoadOeeData(MachineID,"YR")	
+		'yValues': OeeServcie.GetViewData(OeeChart.getXFields(),OeeServcie.LoadOeeData(MachineID,"YR"))
 		}
 	result=ResponseMsg.success(context)
-	print(result)
+	#print(result)
 	return HttpResponse(json_util.dumps(result))

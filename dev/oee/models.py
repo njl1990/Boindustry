@@ -10,7 +10,6 @@ class DB:
 	db_port = 27017
 	db_name = 'oeedb'
 	
-
 	def DBClient():
 		mongoClient = MongoClient(DB.db_host,DB.db_port)
 		DBClient = mongoClient[DB.db_name]
@@ -29,7 +28,12 @@ class OEEData:
 		item=oeeRecord.find_one(filters)
 		return item
 
-
+class BaseData:
+	# Load Load MainInfo
+	def GetRecordByFilter(filters):
+		oeeRecord = DB.DBClient()['basedata']
+		item=oeeRecord.find(filters)
+		return item
 ################################
 '''
 class CTask:

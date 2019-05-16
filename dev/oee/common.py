@@ -24,7 +24,11 @@ class DateStr:
 		return time.strftime('%Y-%m-%d',time.localtime(time.time()))
 
 	def currentTime():
-		return time.localtime(time.time())
+		return time.mktime(time.strptime(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),("%Y-%m-%d %H:%M:%S")))
+
+	def currentTimeValue():
+		currentStr=DateStr.currentTimeStr();
+		return DateStr.getTimeValue(currentStr)
 
 	def currentTimeStr():
 		return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
@@ -36,3 +40,15 @@ class DateStr:
 		t1 = time.mktime(time.strptime(time1,("%Y-%m-%d %H:%M:%S")))
 		t2 = time.mktime(time.strptime(time2,("%Y-%m-%d %H:%M:%S")))
 		return int(t1) - int(t2)
+
+	def getStartTimeValue(DateStr):
+		# XXXX-XX-XX
+		TodayStartDateTimeStr=DateStr+' 00:00:00'
+		timeValue=time.mktime(time.strptime(TodayStartDateTimeStr,("%Y-%m-%d %H:%M:%S")))
+		return timeValue
+
+	def getTimeValue(DateStr):
+		return time.mktime(time.strptime(DateStr,("%Y-%m-%d %H:%M:%S")))
+
+	def getCurrentHour():
+		return int(time.strftime("%H", time.localtime()))

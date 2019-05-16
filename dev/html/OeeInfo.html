@@ -130,41 +130,27 @@
 
 								<div class="center">
 									<div class="row">
-										<div class="col-sm-4">
-											<h3 class="header smaller blue">设备综合效率（OEE）</h3>
-											<p> 统计设备的综合效率，包括时间稼动率、性能稼动率和良品率</p>
-										</div>
-										<div class="col-sm-8">
-										<div id="container3" style="width: 600px;height:400px;"></div>
+										<h3 class="header smaller blue">设备综合效率（OEE）</h3>
+										<p> 统计设备的综合效率，包括时间稼动率、性能稼动率和良品率</p>
+										<div id="OEE-chart" style="width: 100%;height:300px;"></div>
 										</div>
 									</div>
 									<div class="row">
 										<div class="col-sm-6">
 											<h3 class="header smaller blue">时间稼动率（Time utilization rate）</h3>
 											<p>设备有效工作时间和计划工作时间的比例</p>
-											 <div id="container" style="width: 600px;height:400px;"></div>
-											<!-- <div class="widget-box" id="widget-box-1">
-												<div class="widget-header">
-													<h5 class="widget-title">2019-05-10 XER设备  时间稼动率</h5>
-												</div>
-
-												<div class="widget-body">
-													<div class="widget-main">
-														<canvas id="myChart" width="100%" height="50%"></canvas>
-													</div>
-												</div>
-											</div> -->
+											 <div id="TUR-chart" style="width: 100%;height:400px;"></div>
 										</div>
 										<div class="col-sm-6">
 											<h3 class="header smaller blue">性能稼动率（Production efficiency）</h3>
 											<p>某一时段实际产出和标准产出的比例</p>
-											<div id="main" style="width: 600px;height:400px;"></div>
+											<div id="PER-chart" style="width: 100%;height:400px;"></div>
 										</div>
 									</div>
 									<div class="col-sm-6">
 										<h3 class="header smaller blue">良品率（Yield）</h3>
 										<p>产出的良品数量和实际产出总量的比例</p>
-											 <div id="containers" style="width: 600px;height:400px;"></div>
+											 <div id="YR-chart" style="width: 100%;height:400px;"></div>
 									</div>
 
 								</div>
@@ -283,20 +269,20 @@
 
 					// 指定图表的配置项和数据
 					var option = {
-			xAxis: {
-					type: 'category',
-					boundaryGap: false,
-					data: ['', '4', '8', '12', '16', '20', '24']
-			},
-			yAxis: {
-					type: 'value'
-			},
-			series: [{
-					data: [0 ,20 , , , , ],
-					type: 'line',
-					areaStyle: {}
-			}]
-	};
+							xAxis: {
+									type: 'category',
+									boundaryGap: false,
+									data: ['', '4', '8', '12', '16', '20', '24']
+							},
+							yAxis: {
+									type: 'value'
+							},
+							series: [{
+									data: [0 ,20 , , , , ],
+									type: 'line',
+									areaStyle: {}
+							}]
+					};
 
 
 					// 使用刚指定的配置项和数据显示图表。
@@ -337,6 +323,9 @@
 			 myChart.setOption(option, true);
 			}
 			</script>
+			
+			
+			
 <script type="text/javascript">
  // 良品率
 var dom = document.getElementById("containers");
@@ -382,27 +371,10 @@ if (option && typeof option === "object") {
 			
 		
 		<script type="text/javascript">
-			function LoadData(MachineID){
-				urlstr = "./LoadOee"
-			    htmlobj=$.ajax({
-			    	type: 'POST',
-					url:urlstr,
-					async:false,
-					data: {'MachineID':MachineID},
-					success:
-				        function(data) {
-				        	//alert(data)
-				        	if(data!='None'){
-				        		var obj = eval('(' + data + ')');	
-								alert(obj.data.xFeilds)
-								alert(obj.data.yValues)
-				        	}
-				        }
-			    });
-			}
 
 			
-		
+
+			
 			jQuery(function($) {
 			
 				$('[data-rel=tooltip]').tooltip();
@@ -607,197 +579,201 @@ if (option && typeof option === "object") {
 				});
 			})
 		</script>
+		
+		<!----  OEE CHART ----->
 		<script type="text/javascript">
-			date = new Date()
-			dateStr = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();      
+		
+		function initOEEChart(xData,yData){
+			var dom = document.getElementById("OEE-chart");
+			var myChart = echarts.init(dom);
+			var app = {};
 			
-
-			///topic select
-			function topicselect(){
-				/* get prefix */
-				itemvalue=$('.topicselector').val()
-				prefix = $('.'+itemvalue).attr('prefix')
-				timestamp = (new Date()).valueOf();
-				topic_tamp = prefix+timestamp
-				/* update topictaskname */
-				$('.topictaskname').val(topic_tamp)		
-				$('.topicselector').attr('selectedId',itemvalue);
-			}
-
-			/// update topictaskname
-			function updatetopictaskname(){
-				topictaskname=$('.topictaskname').val()
-				$('.order-taskname').html(topictaskname)
-				$('.date-time-str').html(dateStr)
-			}
-
-			function updatecooperator(){
-				itemvalue=$('.cooperator-selector').val()
-				$('.cooperator-selector').attr('selectedItem',itemvalue)
-			}
-
-
-			topicselect()
-			updatetopictaskname()
-			updatecooperator()
-			///$('.datetimestr').html()
-
-			/// topictaskname Change
-			$('.topictaskname').change(function(){
-					updatetopictaskname();
-				});
-
+			option = {
+				xAxis: {
+					type: 'category',
+					boundaryGap: true,
+					data: xData
+			 },
+			 yAxis: {
+					 type: 'value',
+					 axisLabel: { show: true, interval: 'auto', formatter: '{value} %' },
+			 },
+			 series: [{
+					 data: yData,
+					 type: 'line',
+					 areaStyle: {}
+			 }]
+			};
 			
-			$('.topicselector').change(function(){
-					topicselect()
-					updatetopictaskname()
-				});
-
-			$('.cooperator-selector').change(function(){
-					updatecooperator()
-				});
-
-			$(".btn-update").click(function(){
-				ID= $(this).attr('CTaskId')
-				//alert(ID)
-				//submit update status
-				urlstr = "./updateStatus"
+			if (option && typeof option === "object") {
+			 myChart.setOption(option, true);
+			}
+		}
+		
+		function initYRChart(xData,yData){
+			var dom = document.getElementById("YR-chart");
+			var myChart = echarts.init(dom);
+			var app = {};
+			
+			option = {
+				xAxis: {
+					type: 'category',
+					boundaryGap: true,
+					data: xData
+			 },
+			 yAxis: {
+					 type: 'value',
+					 axisLabel: { show: true, interval: 'auto', formatter: '{value} %' },
+			 },
+			 series: [{
+					 data: yData,
+					 type: 'line',
+					 areaStyle: {}
+			 }]
+			};
+			;
+			if (option && typeof option === "object") {
+			 myChart.setOption(option, true);
+			}
+		}
+		
+		function initPERChart(xData,yData){
+			var dom = document.getElementById("PER-chart");
+			var myChart = echarts.init(dom);
+			var app = {};
+			
+			option = {
+				xAxis: {
+					type: 'category',
+					boundaryGap: true,
+					data: xData
+			 },
+			 yAxis: {
+					 type: 'value',
+					 axisLabel: { show: true, interval: 'auto', formatter: '{value} %' },
+			 },
+			 series: [{
+					 data: yData,
+					 type: 'line',
+					 areaStyle: {}
+			 }]
+			};
+			;
+			if (option && typeof option === "object") {
+			 myChart.setOption(option, true);
+			}
+		}
+		
+		function initTURChart(xData,yData){
+			var dom = document.getElementById("TUR-chart");
+			var myChart = echarts.init(dom);
+			var app = {};
+			
+			option = {
+				xAxis: {
+					type: 'category',
+					boundaryGap: true,
+					data: xData
+			 },
+			yAxis: {
+					 type: 'value',
+					 axisLabel: { show: true, interval: 'auto', formatter: '{value} %' },
+			 },
+			 series: [{
+					 data: yData,
+					 type: 'line',
+					 areaStyle: {}
+			 }]
+			};
+			;
+			if (option && typeof option === "object") {
+			 myChart.setOption(option, true);
+			}
+		}
+		
+		
+		function LoadOEEData(MachineID){
+				urlstr = "./LoadOee"
 			    htmlobj=$.ajax({
 			    	type: 'POST',
 					url:urlstr,
 					async:false,
-					data: {'ID':ID},
-					success:
-				        function(data) {
-				        	if(data=='over'){
-
-				        	}
-				        	if(data!=-1){
-				        		$(".label-status-"+ID).html(data)
-				        		bootbox.dialog({
-									message: "<span class='bigger-110'>已成功更新协同任务状态至<span class='red'>"+data+"</soan></span>",
-									buttons:
-									{
-										"success" :
-										 {
-											"label" : "<i class='ace-icon fa fa-check'></i> 确认",
-											"className" : "btn-sm btn-success",
-											"callback": function() {
-												//Example.show("great success");
-											}
-										},
-									}
-								});
-				        	}
-				        }
-			    });
-			});
-
-			/// Show Information
-			function loadCreatorInfo(){
-				urlstr = "./loadCooperator"
-				ID='5cbd7e1a0f2200064403b313'
-			    htmlobj=$.ajax({
-			    	type: 'POST',
-					url:urlstr,
-					async:false,
-					data: {'ID':ID},
+					data: {'MachineID':MachineID},
 					success:
 				        function(data) {
 				        	//alert(data)
 				        	if(data!='None'){
 				        		var obj = eval('(' + data + ')');
-				        		$('.info-creator-name').html(obj.Name)
+								initOEEChart(obj.data.xFeilds,obj.data.yValues)								
 				        	}
-
 				        }
 			    });
 			}
-
-			function loadCooperatorInfo(){
-				//alert('loadCooperatorInfo')
-				urlstr = "./loadCooperator"
-				ID=$('.cooperator-selector').attr('selectedItem')
+			
+		function LoadYRData(MachineID){
+				urlstr = "./LoadYieldRate"
 			    htmlobj=$.ajax({
 			    	type: 'POST',
 					url:urlstr,
 					async:false,
-					data: {'ID':ID},
+					data: {'MachineID':MachineID},
 					success:
 				        function(data) {
+				        	//alert(data)
 				        	if(data!='None'){
 				        		var obj = eval('(' + data + ')');
-				        		$('.info-cooperator-name').html(obj.Name)
+								initYRChart(obj.data.xFeilds,obj.data.yValues)								
 				        	}
 				        }
 			    });
 			}
-
-
-			function submitTask(){
-				alert('taskSubmit')
-				urlstr = "./taskSubmit"
-				CTaskName=$('.topictaskname').val()
-				CTopicID=$('.topicselector').attr('selectedId')
-				CTopicConf='<CTopicConf>'
-				Creator='5cbd7e1a0f2200064403b313'
-				CStatus=$('.flue-first-step').html()
-				Cooperators=[$('.cooperator-selector').attr('selectedItem')]
-				Task={
-					'CTaskName':CTaskName,
-					'Creator':Creator,
-					'CStatus':CStatus,
-					'Cooperators':Cooperators,
-					'CTopicID':CTopicID,
-					'CTopicConf':'',
-				}
-				alert(JSON.stringify(Task))
+			
+		function LoadPERData(MachineID){
+				urlstr = "./LoadProductionEfficiencyRate"
 			    htmlobj=$.ajax({
 			    	type: 'POST',
 					url:urlstr,
 					async:false,
-					data: {'Task':JSON.stringify(Task)},
+					data: {'MachineID':MachineID},
 					success:
 				        function(data) {
-				        	///alert('ok')
-				        	if(data!='None'){
-
-				        	}
-				        }
-			    });
-			}
-
-
-			function loadTaskInfo(){
-				//alert('loadTaskInfo')
-				itemvalue=$('.topicselector').attr('selectedId')
-				//alert("itemvalue="+itemvalue)
-				// load TaskInfo (Workflue)
-				urlstr = "./loadTopic"
-			    htmlobj=$.ajax({
-			    	type: 'POST',
-					url:urlstr,
-					async:false,
-					data: {'ID':itemvalue},
-					success:
-				        function(data) {
+				        	//alert(data)
 				        	if(data!='None'){
 				        		var obj = eval('(' + data + ')');
-				        		step_len = obj.CTopicConf.length
-				        		if(step_len>=2){
-				        			// 1st
-				        			$('.flue-first-step').html(obj.CTopicConf[0])
-				        			html_str=''
-				        			for (var i=1;i<step_len-1;i++){
-				        				html_str=html_str+'<span class="label label-lg label-success arrowed-right">'+obj.CTopicConf[i-1]+'</span>'	
-				        			}
-				        			$('.flue-middle-step').html(html_str)
-				        			$('.flue-last-step').html(obj.CTopicConf[step_len-1])
-				        		}
+								initPERChart(obj.data.xFeilds,obj.data.yValues)								
 				        	}
 				        }
 			    });
 			}
+			
+		function LoadTURData(MachineID){
+				urlstr = "./LoadTimeUtilizationRate"
+			    htmlobj=$.ajax({
+			    	type: 'POST',
+					url:urlstr,
+					async:false,
+					data: {'MachineID':MachineID},
+					success:
+				        function(data) {
+				        	//alert(data)
+				        	if(data!='None'){
+				        		var obj = eval('(' + data + ')');
+								initTURChart(obj.data.xFeilds,obj.data.yValues)								
+				        	}
+				        }
+			    });
+			}
+			
+		function LoadData(ID){
+			LoadOEEData(ID)
+			LoadYRData(ID)
+			LoadPERData(ID)
+			LoadTURData(ID)
+		}
+		
+		LoadData('2000-01-11-3002989')
+		
+
 		</script>
 	</body>
 </html>
