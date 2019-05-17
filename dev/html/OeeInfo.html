@@ -128,12 +128,72 @@
 									</button>
 								</div>
 
+								
+								<div class="space-10"></div>
+								
 								<div class="center">
+									<div class="row">
+										<div class="col-sm-4">
+											<div class="input-group">
+												<div class="space-6"></div>
+												<span class="input-group-addon">
+													<i class="ace-icon fa fa-cogs"></i>
+												</span>
+												<select class="form-control" id='MachineSelect'>
+													{% for item in MachineList %}
+													<option value="{{item.instruName}}">{{item.instruName}}</option>
+													{% endfor %}
+												</select>
+												<span class="input-group-btn">
+													<button id= 'search-btn' onclick="search()" type="button" class="btn btn-purple btn-sm">
+														<span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
+														查看
+													</button>
+												</span>
+											</div>
+										</div>
+									</div>
+									
+									<div class="space-4"></div>
+									
+									<div class="row">
+										<div class="col-sm-12">
+											<table id="simple-table" class="table  table-bordered table-hover">
+												<thead>
+													<tr>
+														<!---
+														<th class="center">
+															<label class="pos-rel">
+																<input type="checkbox" class="ace" />
+																<span class="lbl"></span>
+															</label>
+														</th>
+														---->
+														<th class="center">设备名称</th>
+														<th class="center">设备类型</th>
+														<th class="center">设备型号</th>
+														<th class="center">测试记录数</th>
+													</tr>
+												</thead>
+
+												<tbody>
+														<tr>
+															<td class="center" id='MachineName'>{{MachineName}}</td>
+															<td class="center" id='MachineType'>
+															</td>
+															<td class="center" id='MachineDscp'>
+															</td>
+															<td class="center" id='MachineCount'>							
+															</td>
+														</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>	
 									<div class="row">
 										<h3 class="header smaller blue">设备综合效率（OEE）</h3>
 										<p> 统计设备的综合效率，包括时间稼动率、性能稼动率和良品率</p>
 										<div id="OEE-chart" style="width: 100%;height:300px;"></div>
-										</div>
 									</div>
 									<div class="row">
 										<div class="col-sm-6">
@@ -223,365 +283,57 @@
 		<script src="{% static 'assets/js/ace-elements.min.js' %}"></script>
 		<script src="{% static 'assets/js/ace.min.js' %}"></script>
 		<!-- inline scripts related to this page -->
-		
-		<script type="text/javascript">
-			var ctx = document.getElementById('myChart').getContext('2d');
-			var myChart = new Chart(ctx, {
-			    type: 'line',
-			    data: {
-			        labels: ['08', '09', '10', '11', '12', '13'],
-			        datasets: [{
-			            label: '# of Votes',
-			            data: [12, 19, 3, 5, 2, 3],
-			            backgroundColor: [
-			                'rgba(255, 99, 132, 0.2)',
-			                'rgba(54, 162, 235, 0.2)',
-			                'rgba(255, 206, 86, 0.2)',
-			                'rgba(75, 192, 192, 0.2)',
-			                'rgba(153, 102, 255, 0.2)',
-			                'rgba(255, 159, 64, 0.2)'
-			            ],
-			            borderColor: [
-			                'rgba(255, 99, 132, 1)',
-			                'rgba(54, 162, 235, 1)',
-			                'rgba(255, 206, 86, 1)',
-			                'rgba(75, 192, 192, 1)',
-			                'rgba(153, 102, 255, 1)',
-			                'rgba(255, 159, 64, 1)'
-			            ],
-			            borderWidth: 1
-			        }]
-			    },
-			    options: {
-			        scales: {
-			            yAxes: [{
-			                ticks: {
-			                    beginAtZero: true
-			                }
-			            }]
-			        }
-			    }
-			});
-			</script>
-			<script type="text/javascript">
-					// 基于准备好的dom，初始化echarts实例  性能稼动率
-					var myChart = echarts.init(document.getElementById('main'));
-
-					// 指定图表的配置项和数据
-					var option = {
-							xAxis: {
-									type: 'category',
-									boundaryGap: false,
-									data: ['', '4', '8', '12', '16', '20', '24']
-							},
-							yAxis: {
-									type: 'value'
-							},
-							series: [{
-									data: [0 ,20 , , , , ],
-									type: 'line',
-									areaStyle: {}
-							}]
-					};
-
-
-					// 使用刚指定的配置项和数据显示图表。
-					myChart.setOption(option);
-			</script>
 
 			<!-- 时间稼动率 -->
 			<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
 			<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
 			<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
 			<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
-			<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
-			<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
 			<!-- <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=xfhhaTThl11qYVrqLZii6w8qE5ggnhrY&__ec_v__=20190126"></script> -->
 			<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
 			<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
-			<script type="text/javascript">
-			var dom = document.getElementById("container");
-			var myChart = echarts.init(dom);
-			var app = {};
-			option = null;
-			option = {
-			 xAxis: {
-					 type: 'category',
-						boundaryGap: false,
-					 data: ['', '4', '8', '12', '16', '20', '24']
-			 },
-			 yAxis: {
-					 type: 'value'
-			 },
-			 series: [{
-					 data: [0, 13,18 ,22 ,41 ,28 ,77 ],
-					 type: 'line'
-			 }]
-			};
-			;
-			if (option && typeof option === "object") {
-			 myChart.setOption(option, true);
-			}
-			</script>
-			
-			
-			
-<script type="text/javascript">
- // 良品率
-var dom = document.getElementById("containers");
-var myChart = echarts.init(dom);
-var app = {};
-option = null;
-option = {
-	 xAxis: {
-			 type: 'category',
-			 	boundaryGap: false,
-			 data: ['', '4', '8', '12', '16', '20', '24']
-	 },
-	 yAxis: {
-			 type: 'value'
-	 },
-	 series: [{
-			 data: [120, 200, 150, 80, 70, 110, 130],
-			 type: 'line',
-			 symbol: 'triangle',
-			 symbolSize: 20,
-			 lineStyle: {
-					 normal: {
-							 color: 'green',
-							 width: 4,
-							 type: 'dashed'
-					 }
-			 },
-			 itemStyle: {
-					 normal: {
-							 borderWidth: 3,
-							 borderColor: 'yellow',
-							 color: 'blue'
-					 }
-			 }
-	 }]
-};
-;
-if (option && typeof option === "object") {
-	 myChart.setOption(option, true);
-}
-			</script>
+
 			
 			
 		
 		<script type="text/javascript">
-
-			
-
-			
+		
+			function LoadMachineInfo(MachineName){
+				urlstr = "./LoadMachineInfo"
+			    htmlobj=$.ajax({
+			    	type: 'POST',
+					url:urlstr,
+					async:false,
+					data: {'MachineName':MachineName},
+					success:
+				        function(data) {
+				        	//alert(data)
+				        	if(data!='None'){
+				        		var obj = eval('(' + data + ')');
+									$('#MachineType').html(obj.data.MachineInfo.type)
+									$('#MachineDscp').html(obj.data.MachineInfo.dscp)
+									$('#MachineCount').html(obj.data.MachineInfo.count)							
+				        	}
+				        }
+			    });
+			}
+		
+		
 			jQuery(function($) {
-			
-				$('[data-rel=tooltip]').tooltip();
-			
-				$('.select2').css('width','200px').select2({allowClear:true})
-				.on('change', function(){
-					$(this).closest('form').validate().element($(this));
-				}); 
-			
-			
-				var $validation = false;
-				$('#fuelux-wizard-container')
-				.ace_wizard({
-					//step: 2 //optional argument. wizard will jump to step "2" at first
-					//buttons: '.wizard-actions:eq(0)'
-				})
-				.on('actionclicked.fu.wizard' , function(e, info){
-					if(info.step == 1 && $validation) {
-						if(!$('#validation-form').valid()) e.preventDefault();
-						
-					}
-
-					if(info.step == 2){
-						loadCreatorInfo();
-						loadCooperatorInfo();
-						loadTaskInfo();
-					}
-				})
-				//.on('changed.fu.wizard', function() {
-				//})
-				.on('finished.fu.wizard', function(e) {
-
-					submitTask();
-
-					bootbox.dialog({
-						message: "协同任务已创建！", 
-						buttons: {
-							"success" : {
-								"label" : "确认",
-								"className" : "btn-sm btn-primary"
-							}
-						}
-					});
-				}).on('stepclick.fu.wizard', function(e){
-					//e.preventDefault();//this will prevent clicking and selecting steps
-				});
-			
-			
-				//jump to a step
-				/**
-				var wizard = $('#fuelux-wizard-container').data('fu.wizard')
-				wizard.currentStep = 3;
-				wizard.setState();
-				*/
-			
-				//determine selected step
-				//wizard.selectedItem().step
-			
-			
-			
-				//hide or show the other form which requires validation
-				//this is for demo only, you usullay want just one form in your application
-				$('#skip-validation').removeAttr('checked').on('click', function(){
-					$validation = this.checked;
-					if(this.checked) {
-						$('#sample-form').hide();
-						$('#validation-form').removeClass('hide');
-					}
-					else {
-						$('#validation-form').addClass('hide');
-						$('#sample-form').show();
-					}
-				})
-			
-			
-			
-				//documentation : http://docs.jquery.com/Plugins/Validation/validate
-			
-			
-				$.mask.definitions['~']='[+-]';
-				$('#phone').mask('(999) 999-9999');
-			
-				jQuery.validator.addMethod("phone", function (value, element) {
-					return this.optional(element) || /^\(\d{3}\) \d{3}\-\d{4}( x\d{1,6})?$/.test(value);
-				}, "Enter a valid phone number.");
-			/*
-				$('#validation-form').validate({
-					errorElement: 'div',
-					errorClass: 'help-block',
-					focusInvalid: false,
-					ignore: "",
-					rules: {
-						email: {
-							required: true,
-							email:true
-						},
-						password: {
-							required: true,
-							minlength: 5
-						},
-						password2: {
-							required: true,
-							minlength: 5,
-							equalTo: "#password"
-						},
-						name: {
-							required: true
-						},
-						phone: {
-							required: true,
-							phone: 'required'
-						},
-						url: {
-							required: true,
-							url: true
-						},
-						comment: {
-							required: true
-						},
-						state: {
-							required: true
-						},
-						topic-selector: {
-							required: true
-						},
-						subscription: {
-							required: true
-						},
-						gender: {
-							required: true,
-						},
-						agree: {
-							required: true,
-						}
-					},
-			
-					messages: {
-						email: {
-							required: "Please provide a valid email.",
-							email: "Please provide a valid email."
-						},
-						password: {
-							required: "Please specify a password.",
-							minlength: "Please specify a secure password."
-						},
-						state: "Please choose state",
-						subscription: "Please choose at least one option",
-						gender: "Please choose gender",
-						agree: "Please accept our policy"
-					},
-			
-			
-					highlight: function (e) {
-						$(e).closest('.form-group').removeClass('has-info').addClass('has-error');
-					},
-			
-					success: function (e) {
-						$(e).closest('.form-group').removeClass('has-error');//.addClass('has-info');
-						$(e).remove();
-					},
-			
-					errorPlacement: function (error, element) {
-						if(element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
-							var controls = element.closest('div[class*="col-"]');
-							if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
-							else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
-						}
-						else if(element.is('.select2')) {
-							error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
-						}
-						else if(element.is('.chosen-select')) {
-							error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
-						}
-						else error.insertAfter(element.parent());
-					},
-			
-					submitHandler: function (form) {
-					},
-					invalidHandler: function (form) {
-					}
-				});
-				*/
-			
-				$('#modal-wizard-container').ace_wizard();
-				$('#modal-wizard .wizard-actions .btn[data-dismiss=modal]').removeAttr('disabled');
-				
-				
-				/**
-				$('#date').datepicker({autoclose:true}).on('changeDate', function(ev) {
-					$(this).closest('form').validate().element($(this));
-				});
-				
-				$('#mychosen').chosen().on('change', function(ev) {
-					$(this).closest('form').validate().element($(this));
-				});
-				*/
-				
-				
-				$(document).one('ajaxloadstart.page', function(e) {
-					//in ajax mode, remove remaining elements before leaving page
-					$('[class*=select2]').remove();
-				});
+				MachineName=$('#MachineName').html()
+				LoadMachineInfo(MachineName)
 			})
 		</script>
 		
 		<!----  OEE CHART ----->
 		<script type="text/javascript">
+		
+		function search(){
+			MachineName=$('#MachineSelect').val()
+			LoadData(MachineName)
+			LoadMachineInfo(MachineName)
+		}
+		
 		
 		function initOEEChart(xData,yData){
 			var dom = document.getElementById("OEE-chart");

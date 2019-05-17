@@ -47,7 +47,7 @@ def main():
 				dataObj[field['name']]=field['value']
 			# 存库
 			result = DB.insertDB(dataObj)
-		time.sleep(3)
+		time.sleep(10)
 
 if __name__ == '__main__':
 	main()

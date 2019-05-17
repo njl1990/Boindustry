@@ -49,7 +49,7 @@ def main():
 	DBClient = mongoClient[DB.db_name]
 	oeeRecord = DBClient['basedata']
 	
-	while i<245219:
+	while i<246218:
 		print(i)
 		##print(json_util.dumps(obj))
 

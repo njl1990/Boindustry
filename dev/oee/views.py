@@ -12,13 +12,23 @@ from bson import json_util
 
 #PageLoad
 def index(request):
-	context = {'data': 'data'}
+	MachineName='TLZH-01-08-3000416'
 	return render(request, 'OeeInfo.html',context)
 
 
 def OeeInfo(request):
-	context = None
-	return render(request, 'OeeInfo.html', ResponseMsg.success(context))
+	MachineName='TLZH-01-08-3000416'
+	if request.GET.__contains__('MachineName'):
+		MachineName=request.GET['MachineName']
+		MachineInfo=OeeServcie.LoadMachineInfo(MachineName)
+		MachineList=OeeServcie.LoadMachineList()
+	context = {
+					'MachineName':MachineName,
+					'MachineInfo':MachineInfo,
+					'MachineList':MachineList
+				}
+	##print(context)
+	return render(request, 'OeeInfo.html', context)
 
 def OeeReport(request):
 	context = {'data': 'data'}
@@ -34,7 +44,7 @@ def OeeConfig(request):
 
 def OeeMachineList(request):
 	context = {'MachineList': OeeServcie.LoadMachineList()}
-	print(context)
+	##print(context)
 	return render(request, 'OeeMachineList.html', context)
 
 # API
@@ -83,4 +93,12 @@ def LoadYieldRate(request):
 		}
 	result=ResponseMsg.success(context)
 	#print(result)
+	return HttpResponse(json_util.dumps(result))
+
+def LoadMachineInfo(request):
+	MachineName=request.POST['MachineName']
+	MachineInfo=OeeServcie.LoadMachineInfo(MachineName)
+	context = {'MachineInfo':MachineInfo}
+	##print(context)
+	result=ResponseMsg.success(context)
 	return HttpResponse(json_util.dumps(result))

@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.OeeInfo, name='OeeInfo'),
+    path('', views.OeeMachineList, name='OeeMachineList'),
 	path('OeeInfo', views.OeeInfo, name='OeeInfo'),
 	path('OeeReport', views.OeeReport, name='OeeReport'),
 	path('OeeTransaction', views.OeeTransaction, name='OeeTransaction'),
@@ -16,4 +16,5 @@ urlpatterns = [
 	path('LoadProductionEfficiencyRate', views.LoadProductionEfficiencyRate, name='LoadProductionEfficiencyRate'),
 	path('LoadTimeUtilizationRate', views.LoadTimeUtilizationRate, name='LoadTimeUtilizationRate'),
 	path('LoadYieldRate', views.LoadYieldRate, name='LoadYieldRate'),
+	path('LoadMachineInfo', views.LoadMachineInfo, name='LoadMachineInfo'),
 ]

@@ -29,6 +29,12 @@ class OeeServcie:
 		result=OEEData.LoadMachineList()
 		return result
 
+	def LoadMachineInfo(instruName):
+		MachineList=OEEData.LoadMachineList()
+		for item in MachineList:
+			if item['instruName'] == instruName:
+				return item;
+		return None;
 ######################################
 	
 	# Compute
@@ -67,12 +73,9 @@ class OeeServcie:
 				#计算良品率
 				if 'No error' in item['message']:
 					YIELD=YIELD+1;
-			print('fault:' + str(item['testTime']/1000)+'<'+str((timeValue+int(hour)*3600)))
-
 
 		#不良数量
 		REJECTS=ACTUAL_OUTPUTE-YIELD
-		print('H='+str(hour)+';YIELD='+str(YIELD))
 		#产出统计时间
 		OUTPUT_TIME=(DateStr.currentTimeValue()+int(hour)*3600)-FIST_PRODUCT_TIME 
 
