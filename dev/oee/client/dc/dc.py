@@ -22,10 +22,11 @@ class DB:
 			print('Save Data:'+str(obj['instrID']))
 			result=oeeRecord.insert_one(obj)
 			return result
+		print('No. '+str(obj['instrID'])+' exsist...')
 		return
 
 def getPostData():
-	dataObj={"dbName": "atsData","tableName": "instrument","desc":True,"columnsToGet":["instrID","instruName","instruType","description","message","usedTime","testTime"],"limit":10,"exclusiveEndPrimaryKey":[{"name": "instrID", "type": "integer", "value": -1}]}
+	dataObj={"dbName": "atsData","tableName": "instrument","desc":True,"columnsToGet":["instrID","instruName","instruType","description","seriesNumber","message","usedTime","testTime"],"limit":10,"exclusiveEndPrimaryKey":[{"name": "instrID", "type": "integer", "value": -1}]}
 	headersObj = {'tpye':'POST','Content-Type':'application/json;charset=utf-8','dataType':"json"}
 	request = urllib.request.Request(url="http://rest.gziiot.htdata.com:7777/api/data/GetRange?tid=14220&k=cAc6GJVf4DY21g5XR5LcHnkntWH8fkpv",headers=headersObj,data=json_util.dumps(dataObj).encode("utf-8"))
 	response = urllib.request.urlopen(request)
@@ -39,6 +40,7 @@ def main():
 
 	while True:
 		result = getPostData()
+		##print(result)
 		data=json_util.loads(result)
 		rows=data['rows']
 		for item in rows:

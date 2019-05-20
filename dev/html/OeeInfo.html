@@ -95,7 +95,7 @@
 
 
 					<li class="hover">
-						<a href="./">
+						<a href="./OeeTransaction">
 							<i class="menu-icon fa fa-pencil-square-o"></i>
 							<span class="menu-text"> 事务上报  </span>
 						</a>
@@ -197,9 +197,9 @@
 									</div>
 									<div class="row">
 										<div class="col-sm-6">
-											<h3 class="header smaller blue">时间稼动率（Time utilization rate）</h3>
-											<p>设备有效工作时间和计划工作时间的比例</p>
-											 <div id="TUR-chart" style="width: 100%;height:400px;"></div>
+											<h3 class="header smaller blue">良品率（Yield）</h3>
+											<p>产出的良品数量和实际产出总量的比例</p>
+												 <div id="YR-chart" style="width: 100%;height:400px;"></div>
 										</div>
 										<div class="col-sm-6">
 											<h3 class="header smaller blue">性能稼动率（Production efficiency）</h3>
@@ -207,12 +207,26 @@
 											<div id="PER-chart" style="width: 100%;height:400px;"></div>
 										</div>
 									</div>
-									<div class="col-sm-6">
-										<h3 class="header smaller blue">良品率（Yield）</h3>
-										<p>产出的良品数量和实际产出总量的比例</p>
-											 <div id="YR-chart" style="width: 100%;height:400px;"></div>
+									<div class="row">
+											<h3 class="header smaller blue">时间稼动率（Time utilization rate）</h3>
+											<p>设备有效工作时间和计划工作时间的比例</p>
+											<div class="progress">
+												<div class="DT progress-bar progress-bar-danger" style="width: 0%;">故障</div>
+												<div class="COT progress-bar progress-bar-yellow" style="width: 0%;">换线</div>
+												<div class="AT progress-bar progress-bar-info" style="width: 0%;">调试</div>
+												<div class="RHT progress-bar progress-bar-warning" style="width: 0%;">不良</div>
+												<div class="PDT progress-bar progress-bar-purple" style="width: 0%;">计划</div>
+												<div class="OK progress-bar progress-bar-success" style="width: 0%;">正常</div>
+								
+								
+											</div>
+											 <div id="TUR-chart" style="width: 100%;height:400px;" class ="hidden"></div>
+											 
+											<h2 id="TUR-Value">
+												
+											</h2>
 									</div>
-
+										
 								</div>
 
 								<!-- PAGE CONTENT ENDS -->
@@ -289,6 +303,7 @@
 		<script type="text/javascript">
 		
 			function LoadMachineInfo(MachineName){
+
 				urlstr = "./LoadMachineInfo"
 			    htmlobj=$.ajax({
 			    	type: 'POST',
@@ -297,7 +312,7 @@
 					data: {'MachineName':MachineName},
 					success:
 				        function(data) {
-				        	//alert(data)
+								//alert(data)
 				        	if(data!='None'){
 				        		var obj = eval('(' + data + ')');
 									$('#MachineName').html(obj.data.MachineInfo.instruName)
@@ -321,6 +336,7 @@
 		
 		function search(){
 			MachineName=$('#MachineSelect').val()
+			
 			LoadData(MachineName)
 			LoadMachineInfo(MachineName)
 		}
@@ -433,7 +449,8 @@
 			 myChart.setOption(option, true);
 			}
 		}
-		
+
+				
 		
 		function LoadOEEData(MachineID){
 				urlstr = "./LoadOee"
@@ -501,7 +518,24 @@
 				        	//alert(data)
 				        	if(data!='None'){
 				        		var obj = eval('(' + data + ')');
-								initTURChart(obj.data.xFeilds,obj.data.yValues)								
+								num=obj.data.yValues.length
+								value=obj.data.yValues[num-1].toFixed(2)+'%'
+								$('#TUR-Value').html(value)
+								TData = obj.data.TransactionData
+								
+								DT=TData.DT/TData.WT*100;
+								COT=TData.COT/TData.WT*100;
+								AT=TData.AT/TData.WT*100;
+								RHT=TData.RHT/TData.WT*100;
+								PDT=TData.PDT/TData.WT*100;
+								OK=100-DT-COT-AT-RHT-PDT
+								$('.DT').attr('style','width: '+DT+'%;');
+								$('.COT').attr('style','width: '+COT+'%;');
+								$('.AT').attr('style','width: '+AT+'%;');
+								$('.RHT').attr('style','width: '+RHT+'%;');
+								$('.PDT').attr('style','width: '+PDT+'%;');
+								$('.OK').attr('style','width: '+OK+'%;');
+								//initTURChart(obj.data.xFeilds,obj.data.yValues)								
 				        	}
 				        }
 			    });
@@ -514,9 +548,8 @@
 			LoadTURData(ID)
 		}
 		
-		LoadData('2000-01-11-3002507')
-		
-
+		MachineName=$('#MachineName').html()
+		LoadData(MachineName)
 		</script>
 	</body>
 </html>

@@ -22,6 +22,10 @@ class DB:
 			print('Save Data:'+str(obj['instrID']))
 			result=oeeRecord.insert_one(obj)
 			return result
+		else:
+			print('Update Data:'+str(obj))
+			result=oeeRecord.update_many({'instrID':obj['instrID']},{'$set':{'seriesNumber':obj['seriesNumber']}})
+			return result
 		return
 
 def getPostData(i):
@@ -29,7 +33,7 @@ def getPostData(i):
 		"dbName": "atsData",
 		"tableName": "instrument",
 		"desc":True,
-		"columnsToGet":["instrID","instruName","instruType","description","message","usedTime","testTime"],
+		"columnsToGet":["instrID","instruName","instruType","description","seriesNumber","message","usedTime","testTime"],
 		"limit":10,
 		"filter":"instrID = '"+str(i)+"'",
 		}
@@ -44,18 +48,19 @@ def getPostData(i):
 
 def main():
 
-	i=246450
+	i=249718
 	mongoClient = MongoClient(DB.db_host,DB.db_port)
 	DBClient = mongoClient[DB.db_name]
 	oeeRecord = DBClient['basedata']
 	
-	while i<249732:
+	while i<250087:
 		print(i)
 		##print(json_util.dumps(obj))
 
 		#查询是否存在
 		item=oeeRecord.find_one({'instrID':i})
-		if item is None:
+		#if item is None:
+		if True:
 			result = getPostData(i)
 			print(result)
 			data=json_util.loads(result)

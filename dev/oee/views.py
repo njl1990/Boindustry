@@ -35,7 +35,9 @@ def OeeReport(request):
 	return render(request, 'OeeReport.html', context)
 
 def OeeTransaction(request):
-	context = {'data': 'data'}
+
+	context= OeeServcie.LoadTransactionData()
+	print(context)
 	return render(request, 'OeeTransaction.html', context)
 
 def OeeConfig(request):
@@ -43,7 +45,7 @@ def OeeConfig(request):
 		'WorkingTime': OeeServcie.LoadWorkingTime(),
 		'StandardTimeList':OeeServcie.LoadStandardTimeList(),
 	}
-	print(context)
+	##print(context)
 	return render(request, 'OeeConfig.html', context)
 
 def OeeMachineList(request):
@@ -80,7 +82,8 @@ def LoadTimeUtilizationRate(request):
 	# Load oee data from db	
 	context = {
 		'xFeilds': OeeChart.getXFields(),
-		'yValues': OeeServcie.GetViewData(OeeChart.getXFields(),OeeServcie.LoadOeeData(MachineID,"TUR"))
+		'yValues': OeeServcie.GetViewData(OeeChart.getXFields(),OeeServcie.LoadOeeData(MachineID,"TUR")),
+		'TransactionData':OeeServcie.LoadTransactionData(),
 		}
 	result=ResponseMsg.success(context)
 	#print(result)
@@ -106,17 +109,54 @@ def LoadMachineInfo(request):
 	return HttpResponse(json_util.dumps(result))
 
 def DeleteOeeConf(request):
-	MachineName=request.POST['MachineName']
-	MachineInfo=OeeServcie.LoadMachineInfo(MachineName)
-	context = {'MachineInfo':MachineInfo}
+	ID = request.POST['id']
+	MachineInfo=OeeServcie.DeleteOeeConf(ID)
+	context = {}
 	##print(context)
 	result=ResponseMsg.success(context)
 	return HttpResponse(json_util.dumps(result))
 
 def UpdateOeeConf(request):
+	typeStr=request.POST['type']
+	value=request.POST['value']
+	ConfID = request.POST['id']
+	oeeConfObj={
+		'_id':ConfID,
+		'type':typeStr,
+		'value':value,	
+	}
+	result=OeeServcie.UpdateOeeConf(oeeConfObj)
+	context = {}
+	result=ResponseMsg.success(context)
+	return HttpResponse(json_util.dumps(result))
+
+def CreateOeeConf(request):
+	typeStr=request.POST['type']
+	value=request.POST['value']
+	ProductName=request.POST['ProductName']
 	MachineName=request.POST['MachineName']
-	MachineInfo=OeeServcie.LoadMachineInfo(MachineName)
-	context = {'MachineInfo':MachineInfo}
-	##print(context)
+	oeeConfObj={
+		'type':typeStr,
+		'value':{
+			'value':value,
+			'ProductName':ProductName,
+			'MachineName':MachineName,
+		}
+	}
+	result=OeeServcie.CreateOeeConf(oeeConfObj)
+	context = {}
+	result=ResponseMsg.success(context)
+	return HttpResponse(json_util.dumps(result))
+
+def UpdateOeeTransaction(request):
+
+	typeStr=request.POST['type']
+	value=request.POST['value']
+	oeeConfObj={
+		'type':typeStr,
+		'value':value,
+	}
+	result=OeeServcie.UpdateOeeTransaction(oeeConfObj)
+	context = {}
 	result=ResponseMsg.success(context)
 	return HttpResponse(json_util.dumps(result))

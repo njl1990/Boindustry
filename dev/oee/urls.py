@@ -19,4 +19,7 @@ urlpatterns = [
 	path('LoadMachineInfo', views.LoadMachineInfo, name='LoadMachineInfo'),
 	path('UpdateOeeConf', views.UpdateOeeConf, name='UpdateOeeConf'),
 	path('DeleteOeeConf', views.DeleteOeeConf, name='DeleteOeeConf'),
+	path('CreateOeeConf', views.CreateOeeConf, name='CreateOeeConf'),
+	path('UpdateOeeTransaction', views.UpdateOeeTransaction, name='UpdateOeeTransaction'),
+	
 ]

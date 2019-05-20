@@ -95,7 +95,7 @@
 
 
 					<li class="hover">
-						<a href="./">
+						<a href="./OeeTransaction">
 							<i class="menu-icon fa fa-pencil-square-o"></i>
 							<span class="menu-text"> 事务上报  </span>
 						</a>
@@ -143,7 +143,7 @@
 																</td>
 																<td class="center">一天的出勤时间</td>
 																<td class="center">	
-																	<button id="btn-submit" onclick='WorkingTimeSubmitBtnClick()' class="btn btn-xs btn-success btn-edit hidden">
+																	<button  id="btn-submit" onclick='WorkingTimeSubmitBtnClick()'  class="btn btn-xs btn-success btn-edit hidden">
 																		<i class="ace-icon fa fa-check  bigger-120"></i>
 																	</button>
 																	<button id="btn-edit" onclick='WorkingTimeEditBtnClick()' class="btn btn-xs btn-info btn-stay">
@@ -172,14 +172,26 @@
 													<tbody>
 														{% for item in StandardTimeList %}
 															<tr>
-																<td class="center">{{item.value.MachineName}}</td>
-																<td class="center">{{item.value.ProductName}}</td>
-																<td class="center">{{item.value.value}}</td>
+																<td class="center">
+																	<span>{{item.value.MachineName}}</span>
+																</td>
+																<td class="center">
+																	<span>{{item.value.ProductName}}</span>
+																</td>
+																<td class=" center">
+																	<span class="lable-value-{{item.id}}" >{{item.value.value}}</span>
+																	<input class="hidden input-value-{{item.id}}" >
+																</td>
 																<td class="center">	
-																	<button onclick='WorkingTimeEditBtnClick()' class="btn btn-xs btn-info btn-stay">
+																	<button onclick='STSubmitBtnClick("{{item.id}}")' class="{{item.id}}-submit btn btn-xs btn-success btn-edit hidden" >
+																		<i class="ace-icon fa fa-check  bigger-120"></i>
+																	<button onclick='STEditBtnClick("{{item.id}}")' class="{{item.id}}-edit btn btn-xs btn-info btn-stay">
 																		<i class="ace-icon fa fa-pencil bigger-120"></i>
 																	</button>
-																	<button  onclick='WorkingTimeTrashBtnClick()' class="btn btn-xs btn-danger btn-edit">
+																	<button  onclick='STTrashBtnClick("{{item.id}}")' class="{{item.id}}-trash btn btn-xs btn-default btn-edit hidden">
+																		<i class="ace-icon fa fa-reply bigger-120"></i>
+																	</button>
+																	<button  onclick='DeleteBtnClick("{{item.id}}")' class="{{item.id}}-delete btn btn-xs btn-danger btn-edit">
 																		<i class="ace-icon fa fa-trash-o bigger-120"></i>
 																	</button>
 																</td>
@@ -187,12 +199,17 @@
 														{% endfor %}
 														
 															<tr>
-																<td class="center"> </td>
-																<td class="center"></td>
-																<td class="center"></td>
+																<td class="center"><input class="hidden input-value-new input-value-new-MachineName" ></td>
+																<td class="center"><input class="hidden input-value-new input-value-new-ProductName" ></td>
+																<td class="center"><input class="hidden input-value-new input-value-new-value" ></td>
 																<td class="center">	
-																	<button class="btn btn-xs btn-success btn-edit">
-																		<i class="ace-icon fa fa-plus  bigger-120"></i>
+																	<button onclick='STCreateSubmitBtnClick("new")' class="new-submit btn btn-xs btn-success btn-edit hidden" >
+																		<i class="ace-icon fa fa-check  bigger-120"></i>
+																	<button onclick='STEditBtnClick("new")' class="new-edit btn btn-xs btn-success btn-stay">
+																		<i class="ace-icon fa fa-plus bigger-120"></i>
+																	</button>
+																	<button  onclick='STTrashBtnClick("new")' class="new-trash btn btn-xs btn-danger btn-edit hidden">
+																		<i class="ace-icon fa fa-trash-o bigger-120"></i>
 																	</button>
 																</td>
 															</tr>
@@ -275,19 +292,30 @@
 
 		function WorkingTimeSubmitBtnClick(){
 			value = $('#input-attrWorkingTime').val()
-			
-			urlstr = "./LoadProductionEfficiencyRate"
+			urlstr = "./UpdateOeeConf"
 			    htmlobj=$.ajax({
 			    	type: 'POST',
 					url:urlstr,
 					async:false,
-					data: {'MachineID':MachineID},
+					data: {
+						'id':'',
+						'type':'WT',
+						'value':value,
+					},
 					success:
 				        function(data) {
-				        	alert(data)
+				        	//alert(data)
 				        	if(data!='None'){
 				        		var obj = eval('(' + data + ')');
-								initPERChart(obj.data.xFeilds,obj.data.yValues)								
+								if(obj.code==0){
+									$('#attrWorkingTimeValue').html(value)
+									$('#attrWorkingTimeValue').removeClass("hidden")
+									$('#input-attrWorkingTime').addClass("hidden")						
+									$('#btn-submit').addClass("hidden")
+									$('#btn-edit').removeClass("hidden")
+									$('#btn-trash').addClass("hidden")
+									
+								}								
 				        	}
 				        }
 			    });
@@ -303,11 +331,113 @@
 		
 		function WorkingTimeTrashBtnClick(){
 			$('#attrWorkingTimeValue').removeClass("hidden")
-			$('#input-attrWorkingTime').addClass("hidden")
-			
+			$('#input-attrWorkingTime').addClass("hidden")			
 			$('#btn-submit').addClass("hidden")
 			$('#btn-edit').removeClass("hidden")
 			$('#btn-trash').addClass("hidden")
+		}
+		
+		function STSubmitBtnClick(id){
+			value = $('.input-value-'+id).val()
+			urlstr = "./UpdateOeeConf"
+			    htmlobj=$.ajax({
+			    	type: 'POST',
+					url:urlstr,
+					async:false,
+					data: {
+						'id':id,
+						'type':'ST',
+						'value':value,	
+					},
+					success:
+				        function(data) {
+				        	if(data!='None'){
+				        		var obj = eval('(' + data + ')');
+								if(obj.code==0){
+									$('.lable-value-'+id).html(value)
+									$('.lable-value-'+id).removeClass("hidden")
+									$('.input-value-'+id).addClass("hidden")						
+									$('.'+id+'-submit').addClass("hidden")
+									$('.'+id+'-edit').removeClass("hidden")
+									$('.'+id+'-trash').addClass("hidden")
+									$('.'+id+'-delete').removeClass("hidden")
+								}								
+				        	}
+				        }
+			    });
+		}
+		
+		function STCreateSubmitBtnClick(id){	
+			MachineName = $('.input-value-new-MachineName').val()
+			ProductName = $('.input-value-new-ProductName').val()
+			value = $('.input-value-new-value').val()
+			//alert(MachineName)
+			dataObj={
+				'type':'ST',
+				'value':value,
+				'ProductName':ProductName,
+				'MachineName':MachineName,
+			}
+			urlstr = "./CreateOeeConf"
+			    htmlobj=$.ajax({
+			    	type: 'POST',
+					url:urlstr,
+					async:false,
+					data: dataObj,
+					success:
+				        function(data) {
+							//alert(data)
+				        	if(data!='None'){
+				        		var obj = eval('(' + data + ')');
+								if(obj.code==0){
+									location.reload()
+								}								
+				        	}
+				        }
+			    });
+		}
+		
+		function STEditBtnClick(id){
+			$('.'+id+'-edit').addClass("hidden")
+			$('.'+id+'-submit').removeClass("hidden")
+			$('.'+id+'-trash').removeClass("hidden")
+			$('.input-value-'+id).removeClass("hidden")
+			$('.lable-value-'+id).addClass("hidden")
+			$('.'+id+'-delete').addClass("hidden")
+			
+		}
+		
+		function STTrashBtnClick(id){
+			$('.lable-value-'+id).removeClass("hidden")
+			$('.input-value-'+id).addClass("hidden")			
+			$('.'+id+'-submit').addClass("hidden")
+			$('.'+id+'-edit').removeClass("hidden")
+			$('.'+id+'-delete').removeClass("hidden")
+			$('.'+id+'-trash').addClass("hidden")
+		}
+	
+		function DeleteBtnClick(id){
+			
+			dataObj={
+				'id':id,
+			}
+			urlstr = "./DeleteOeeConf"
+			    htmlobj=$.ajax({
+			    	type: 'POST',
+					url:urlstr,
+					async:false,
+					data: dataObj,
+					success:
+				        function(data) {
+							//alert(data)
+				        	if(data!='None'){
+				        		var obj = eval('(' + data + ')');
+								if(obj.code==0){
+									location.reload()	
+								}								
+				        	}
+				        }
+			    });
 		}
 		</script>
 		

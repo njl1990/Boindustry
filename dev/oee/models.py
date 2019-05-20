@@ -28,10 +28,11 @@ class OEEData:
 		item=oeeRecord.find_one(filters)
 		return item
 
-	def LoadMachineList():
+	def LoadMachineList(currentValue):
 		oeeRecord = DB.DBClient()['basedata']
 		#result=oeeRecord.aggregate([{'$group':{'_id':"$instruName"},'count':{'$sum':1},'type':{'$first':'$instruType'},'dscp':{'$first':"$description"}}])
 		result=oeeRecord.aggregate([
+			{'$match':{'testTime':{'$gt':currentValue}}},
 			{'$group':{'_id':'$instruName','instruName':{'$first':'$instruName'},'count':{'$sum':1},'type':{'$first':'$instruType'},'dscp':{'$first':"$description"}}}
 		])
 		MachineList=[]
@@ -63,10 +64,21 @@ class OEEConfData:
 		return List
 
 	# Load ConfDataList
-	def DeleteByID(ID):
+	def Delete(filters):
 		conf = DB.DBClient()['conf']
-		
-		return List
+		result=conf.remove(filters)
+		return result
+
+	# Update Conf
+	def Update(filters,set):
+		conf = DB.DBClient()['conf']
+		result=conf.update(filters,set)
+		return result 
+
+	def Insert(obj):
+		conf = DB.DBClient()['conf']
+		result=conf.insert(obj)
+		return result 
 	################################
 '''
 class CTask:
