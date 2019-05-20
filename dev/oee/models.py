@@ -45,7 +45,29 @@ class BaseData:
 		oeeRecord = DB.DBClient()['basedata']
 		item=oeeRecord.find(filters)
 		return item
-################################
+
+class OEEConfData:
+	# Load ConfData
+	def GetConfByFilter(filters):
+		conf = DB.DBClient()['conf']
+		item=conf.find_one(filters)
+		return item
+
+	# Load ConfDataList
+	def LoadConfListByFilter(filters):
+		conf = DB.DBClient()['conf']
+		result=conf.find(filters)
+		List=[]
+		for item in result:
+			 List.append(item)
+		return List
+
+	# Load ConfDataList
+	def DeleteByID(ID):
+		conf = DB.DBClient()['conf']
+		
+		return List
+	################################
 '''
 class CTask:
 	def CreateCTask(data):

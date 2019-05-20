@@ -11,10 +11,10 @@ from bson import json_util
 
 
 #PageLoad
+## Index
 def index(request):
 	MachineName='TLZH-01-08-3000416'
 	return render(request, 'OeeInfo.html',context)
-
 
 def OeeInfo(request):
 	MachineName='TLZH-01-08-3000416'
@@ -39,7 +39,11 @@ def OeeTransaction(request):
 	return render(request, 'OeeTransaction.html', context)
 
 def OeeConfig(request):
-	context = {'data': 'data'}
+	context = {
+		'WorkingTime': OeeServcie.LoadWorkingTime(),
+		'StandardTimeList':OeeServcie.LoadStandardTimeList(),
+	}
+	print(context)
 	return render(request, 'OeeConfig.html', context)
 
 def OeeMachineList(request):
@@ -59,7 +63,6 @@ def LoadOee(request):
 	result=ResponseMsg.success(context)
 	#print(result)
 	return HttpResponse(json_util.dumps(result))
-
 
 def LoadProductionEfficiencyRate(request):
 	MachineID=request.POST['MachineID']
@@ -83,7 +86,6 @@ def LoadTimeUtilizationRate(request):
 	#print(result)
 	return HttpResponse(json_util.dumps(result))
 
-
 def LoadYieldRate(request):
 	MachineID=request.POST['MachineID']
 	# Load oee data from db	
@@ -96,6 +98,22 @@ def LoadYieldRate(request):
 	return HttpResponse(json_util.dumps(result))
 
 def LoadMachineInfo(request):
+	MachineName=request.POST['MachineName']
+	MachineInfo=OeeServcie.LoadMachineInfo(MachineName)
+	context = {'MachineInfo':MachineInfo}
+	##print(context)
+	result=ResponseMsg.success(context)
+	return HttpResponse(json_util.dumps(result))
+
+def DeleteOeeConf(request):
+	MachineName=request.POST['MachineName']
+	MachineInfo=OeeServcie.LoadMachineInfo(MachineName)
+	context = {'MachineInfo':MachineInfo}
+	##print(context)
+	result=ResponseMsg.success(context)
+	return HttpResponse(json_util.dumps(result))
+
+def UpdateOeeConf(request):
 	MachineName=request.POST['MachineName']
 	MachineInfo=OeeServcie.LoadMachineInfo(MachineName)
 	context = {'MachineInfo':MachineInfo}

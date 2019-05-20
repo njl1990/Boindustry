@@ -114,63 +114,92 @@
 								OEE-工业微服务
 								<small>
 									<i class="ace-icon fa fa-angle-double-right"></i>
-									OEE指标可视化
+									OEE 参数设置
 								</small>
 							</h1>
 						</div><!-- /.page-header -->
 
 						<div class="row">
 							<div class="col-xs-12">
-								<div class="hidden-sm hidden-xs">
-									<button type="button" class="sidebar-collapse btn btn-white btn-primary" data-target="#sidebar">
-										<i class="ace-icon fa fa-angle-double-up" data-icon1="ace-icon fa fa-angle-double-up" data-icon2="ace-icon fa fa-angle-double-down"></i>
-										收起/展开 菜单
-									</button>
-								</div>
-
 								<div class="center">
 									<div class="row">
-										
-										<div class="col-xs-12">
-											<table id="simple-table" class="table  table-bordered table-hover">
-												<thead>
-													<tr>
-														<!---
-														<th class="center">
-															<label class="pos-rel">
-																<input type="checkbox" class="ace" />
-																<span class="lbl"></span>
-															</label>
-														</th>
-														---->
-														<th class="center">设备名称</th>
-														<th class="center">设备类型</th>
-														<th class="center">设备型号</th>
-														<th class="center">测试记录数</th>
-													</tr>
-												</thead>
-
-												<tbody>
-													{% for item in MachineList %}
+										<div class="col-sm-4">
+											<h3 class="header smaller blue">时间稼动率参数设置（Time utilization rate）</h3>
+											<p> 统计设备的综合效率，包括时间稼动率、性能稼动率和良品率</p>
+							
+												<table  class="table  table-bordered table-hover table-condensed">
+													<thead>
 														<tr>
-															<td class="center"><a href="./OeeInfo?MachineName={{item.instruName}}">{{item.instruName}}</a></td>
-															<td class="center">
-																{{item.type}}
-															</td>
-															<td class="center">
-																{{item.dscp}}
-															</td>
-															<td class="center">
-																{{item.count}}								
-															</td>
+															<th class="center">出勤时间</th>
+															<th class="center">描述</th>
+															<th class="center">操作</th>
 														</tr>
-													{% endfor %}
-												</tbody>
-
-											</table>
-										</div><!-- /.span -->
-										
-									</div>
+													</thead>
+													<tbody>
+															<tr>
+																<td class="center">
+																	<span id="attrWorkingTimeValue" >{{WorkingTime}}</span>
+																	<input id="input-attrWorkingTime" class="hidden">
+																</td>
+																<td class="center">一天的出勤时间</td>
+																<td class="center">	
+																	<button id="btn-submit" onclick='WorkingTimeSubmitBtnClick()' class="btn btn-xs btn-success btn-edit hidden">
+																		<i class="ace-icon fa fa-check  bigger-120"></i>
+																	</button>
+																	<button id="btn-edit" onclick='WorkingTimeEditBtnClick()' class="btn btn-xs btn-info btn-stay">
+																		<i class="ace-icon fa fa-pencil bigger-120"></i>
+																	</button>
+																	<button id="btn-trash" onclick='WorkingTimeTrashBtnClick()' class="btn btn-xs btn-danger btn-edit hidden">
+																		<i class="ace-icon fa fa-trash-o bigger-120"></i>
+																	</button>
+																</td>
+															</tr>
+													</tbody>
+												</table>
+										</div>
+										<div class="col-sm-8">
+											<h3 class="header smaller blue">性能稼动率参数设置（Production efficiency）</h3>
+											<p>设备有效工作时间和计划工作时间的比例</p>
+											<table  class="table  table-bordered table-hover table-condensed">
+													<thead>
+														<tr>
+															<th class="center">设备编码</th>
+															<th class="center">产品编码</th>
+															<th class="center">标准工时（s）</th>
+															<th class="center">操作</th>
+														</tr>
+													</thead>
+													<tbody>
+														{% for item in StandardTimeList %}
+															<tr>
+																<td class="center">{{item.value.MachineName}}</td>
+																<td class="center">{{item.value.ProductName}}</td>
+																<td class="center">{{item.value.value}}</td>
+																<td class="center">	
+																	<button onclick='WorkingTimeEditBtnClick()' class="btn btn-xs btn-info btn-stay">
+																		<i class="ace-icon fa fa-pencil bigger-120"></i>
+																	</button>
+																	<button  onclick='WorkingTimeTrashBtnClick()' class="btn btn-xs btn-danger btn-edit">
+																		<i class="ace-icon fa fa-trash-o bigger-120"></i>
+																	</button>
+																</td>
+															</tr>
+														{% endfor %}
+														
+															<tr>
+																<td class="center"> </td>
+																<td class="center"></td>
+																<td class="center"></td>
+																<td class="center">	
+																	<button class="btn btn-xs btn-success btn-edit">
+																		<i class="ace-icon fa fa-plus  bigger-120"></i>
+																	</button>
+																</td>
+															</tr>
+													</tbody>
+												</table>
+										</div>
+									</div>									
 								</div>
 
 								<!-- PAGE CONTENT ENDS -->
@@ -241,6 +270,46 @@
 		<script src="{% static 'assets/js/ace-elements.min.js' %}"></script>
 		<script src="{% static 'assets/js/ace.min.js' %}"></script>
 		<!-- inline scripts related to this page -->
-	
+		
+		<script type="text/javascript">
+
+		function WorkingTimeSubmitBtnClick(){
+			value = $('#input-attrWorkingTime').val()
+			
+			urlstr = "./LoadProductionEfficiencyRate"
+			    htmlobj=$.ajax({
+			    	type: 'POST',
+					url:urlstr,
+					async:false,
+					data: {'MachineID':MachineID},
+					success:
+				        function(data) {
+				        	alert(data)
+				        	if(data!='None'){
+				        		var obj = eval('(' + data + ')');
+								initPERChart(obj.data.xFeilds,obj.data.yValues)								
+				        	}
+				        }
+			    });
+		}
+		
+		function WorkingTimeEditBtnClick(){
+			$('#btn-edit').addClass("hidden")
+			$('#btn-submit').removeClass("hidden")
+			$('#btn-trash').removeClass("hidden")
+			$('#input-attrWorkingTime').removeClass("hidden")
+			$('#attrWorkingTimeValue').addClass("hidden")
+		}
+		
+		function WorkingTimeTrashBtnClick(){
+			$('#attrWorkingTimeValue').removeClass("hidden")
+			$('#input-attrWorkingTime').addClass("hidden")
+			
+			$('#btn-submit').addClass("hidden")
+			$('#btn-edit').removeClass("hidden")
+			$('#btn-trash').addClass("hidden")
+		}
+		</script>
+		
 	</body>
 </html>

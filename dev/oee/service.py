@@ -1,12 +1,13 @@
 
 from oee.models import OEEData
 from oee.models import BaseData
+from oee.models import OEEConfData
 from oee.common import DateStr
 from oee.stub import STUB
 import string
 
 class OeeServcie:
-	# Load 类
+#Load Method 
 	def LoadOeeData(MachineID,Type):
 		TodaySTR=DateStr.getTodayStr()
 		Filter ={
@@ -35,10 +36,39 @@ class OeeServcie:
 			if item['instruName'] == instruName:
 				return item;
 		return None;
-######################################
-	
-	# Compute
 
+	## OeeConfig
+	def LoadWorkingTime():
+		WT=None
+		WTObj=OeeServcie.GetOeeConf({'type':'WT'})
+		WT=WTObj['value']
+		print('WT=')
+		print(WTObj)
+		return WT
+
+	def LoadStandardTimeList():
+		StandardTimeList=OeeServcie.LoadOeeConfList({'type':'ST'})
+		print('StandardTimeList=')
+		print(StandardTimeList)
+		return StandardTimeList
+
+	def LoadOeeConfList(filters):
+		ConfList = OEEConfData.LoadConfListByFilter(filters)
+		return ConfList
+
+	def GetOeeConf(filters):
+		Conf = OEEConfData.GetConfByFilter(filters)
+		return Conf
+
+#Update&Delete Method
+	def DeleteOeeConf(ID):
+		
+		return None
+
+	def UpdateOeeConf():
+		return None
+
+#Compute Method
 	def UpDateRecord(MachineID,Type):
 		TodaySTR=DateStr.getTodayStr()
 		Filters={
@@ -56,7 +86,6 @@ class OeeServcie:
 		
 		result=OEEData.UpDateRecord(Filters,Contents)
 		return result
-
 
 	def ComputeToHours(timeValue,hour,datalist,FIST_PRODUCT_TIME):
 
@@ -175,9 +204,7 @@ class OeeServcie:
 			return PERList
 		if Type is 'TUR':
 			return TURList
-
-
-######################################
+#Other Method
 
 	# Others
 	def CheckUpdate(Record):
@@ -191,7 +218,6 @@ class OeeServcie:
 			return True 
 
 	def GetViewData(xFeilds,RecordData):
-
 		yList=[]
 		for item in xFeilds:
 			Y=None	
@@ -203,5 +229,6 @@ class OeeServcie:
 			yList.append(Y)
 		return yList
 
-#OeeServcie.Compute('TLZH-01-08-3000416','YR',DateStr.getTodayStr())
-#OeeServcie.LoadMachineList()
+#Test 
+## OeeServcie.LoadWorkingTime();
+OeeServcie.LoadStandardTimeList();

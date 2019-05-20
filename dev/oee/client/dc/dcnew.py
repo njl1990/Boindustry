@@ -44,12 +44,12 @@ def getPostData(i):
 
 def main():
 
-	i=244994
+	i=246450
 	mongoClient = MongoClient(DB.db_host,DB.db_port)
 	DBClient = mongoClient[DB.db_name]
 	oeeRecord = DBClient['basedata']
 	
-	while i<246218:
+	while i<249732:
 		print(i)
 		##print(json_util.dumps(obj))
 
@@ -68,7 +68,7 @@ def main():
 				print('save:')
 				print(dataObj)
 				result = DB.insertDB(dataObj)
-				time.sleep(3)
+				time.sleep(2)
 		i=i+1
 
 if __name__ == '__main__':

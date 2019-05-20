@@ -37,7 +37,7 @@
 		<!-- ace settings handler -->
 		<script src="{% static 'assets/js/ace-extra.min.js' %}"></script>
 		<script src="{% static 'assets/js/echarts.min.js' %}"></script>
-		
+				
 		<!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
 
 		<!--[if lte IE 8]>
@@ -75,7 +75,7 @@
 
 				<ul class="nav nav-list">
 					<li class="hover">
-						<a href="index.html">
+						<a href="./OeeMachineList">
 							<i class="menu-icon fa fa-tachometer"></i>
 							<span class="menu-text"> OEE 可视化 </span>
 						</a>
@@ -84,7 +84,7 @@
 					</li>
 
 					<li class="hover">
-						<a href="index.html">
+						<a href="./OeeConfig">
 							<i class="menu-icon fa fa-desktop"></i>
 							<span class="menu-text"> 参数设置  </span>
 
@@ -95,7 +95,7 @@
 
 
 					<li class="hover">
-						<a href="index.html">
+						<a href="./">
 							<i class="menu-icon fa fa-pencil-square-o"></i>
 							<span class="menu-text"> 事务上报  </span>
 						</a>
@@ -172,7 +172,7 @@
 														<th class="center">设备名称</th>
 														<th class="center">设备类型</th>
 														<th class="center">设备型号</th>
-														<th class="center">测试记录数</th>
+														<th class="center">今日测试记录数</th>
 													</tr>
 												</thead>
 
@@ -270,7 +270,6 @@
 			if('ontouchstart' in document.documentElement) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
 		</script>
 		<script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
-
 		<!-- page specific plugin scripts -->
 		<script src="{% static 'assets/js/wizard.min.js' %}"></script>
 		<script src="{% static 'assets/js/jquery.validate.min.js' %}"></script>
@@ -284,17 +283,8 @@
 		<script src="{% static 'assets/js/ace.min.js' %}"></script>
 		<!-- inline scripts related to this page -->
 
-			<!-- 时间稼动率 -->
-			<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
-			<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
-			<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
-			<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
-			<!-- <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=xfhhaTThl11qYVrqLZii6w8qE5ggnhrY&__ec_v__=20190126"></script> -->
-			<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
-			<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
+		<!-- 时间稼动率 -->
 
-			
-			
 		
 		<script type="text/javascript">
 		
@@ -310,6 +300,7 @@
 				        	//alert(data)
 				        	if(data!='None'){
 				        		var obj = eval('(' + data + ')');
+									$('#MachineName').html(obj.data.MachineInfo.instruName)
 									$('#MachineType').html(obj.data.MachineInfo.type)
 									$('#MachineDscp').html(obj.data.MachineInfo.dscp)
 									$('#MachineCount').html(obj.data.MachineInfo.count)							

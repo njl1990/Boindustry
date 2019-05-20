@@ -17,4 +17,6 @@ urlpatterns = [
 	path('LoadTimeUtilizationRate', views.LoadTimeUtilizationRate, name='LoadTimeUtilizationRate'),
 	path('LoadYieldRate', views.LoadYieldRate, name='LoadYieldRate'),
 	path('LoadMachineInfo', views.LoadMachineInfo, name='LoadMachineInfo'),
+	path('UpdateOeeConf', views.UpdateOeeConf, name='UpdateOeeConf'),
+	path('DeleteOeeConf', views.DeleteOeeConf, name='DeleteOeeConf'),
 ]
